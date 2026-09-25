@@ -14,7 +14,7 @@ class LocDegraderMapper: commonItems::parser
 
   private:
 	void registerKeys();
-
+	std::string eU4dllSupport(wchar_t ch, bool toUtf8, bool newVersion);
 	std::map<std::string, std::string> replacements;
 };
 } // namespace mappers

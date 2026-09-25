@@ -3,6 +3,7 @@
 #include "LocDegraderMapping.h"
 #include "Log.h"
 #include "ParserHelpers.h"
+#include "../EastAsiaLanguageSupport/EastAsiaLanguageSupport.h"
 
 mappers::LocDegraderMapper::LocDegraderMapper()
 {
@@ -36,6 +37,9 @@ std::string mappers::LocDegraderMapper::degradeString(const std::string& inputSt
 	for (const auto& [utf8, win1252]: replacements)
 	{
 		toReturn = std::regex_replace(toReturn, std::regex(utf8), win1252);
+		toReturn = EastAsiaLanguageSupport::utf8StringToSpecial(toReturn, true, true);
 	}
 	return toReturn;
-}
+}//为了不重写代码，必须将内容整合至这一函数。
+
+
