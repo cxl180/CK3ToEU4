@@ -458,6 +458,7 @@ void EU4::World::outputLocalization(const Configuration& theConfiguration, bool 
 	std::ofstream french("output" / theConfiguration.getOutputName() / "localisation/replace/converter_l_french.yml");
 	std::ofstream spanish("output" / theConfiguration.getOutputName() / "localisation/replace/converter_l_spanish.yml");
 	std::ofstream german("output" / theConfiguration.getOutputName() / "localisation/replace/converter_l_german.yml");
+	std::ofstream simp_chinese("output" / theConfiguration.getOutputName() / "localisation/replace/converter_l_simp_chinese.yml");
 	if (!english.is_open())
 		throw std::runtime_error("Error writing localization file! Is the output folder writable?");
 	if (!french.is_open())
@@ -466,10 +467,13 @@ void EU4::World::outputLocalization(const Configuration& theConfiguration, bool 
 		throw std::runtime_error("Error writing localization file! Is the output folder writable?");
 	if (!german.is_open())
 		throw std::runtime_error("Error writing localization file! Is the output folder writable?");
+	if (!simp_chinese.is_open())
+		throw std::runtime_error("Error writing localization file! Is the output folder writable?");
 	english << commonItems::utf8BOM << "l_english:\n"; // write BOM
 	french << commonItems::utf8BOM << "l_french:\n";	// write BOM
 	spanish << commonItems::utf8BOM << "l_spanish:\n"; // write BOM
 	german << commonItems::utf8BOM << "l_german:\n";	// write BOM
+	simp_chinese << commonItems::utf8BOM << "l_simp_chinese:\n"; // write BOM
 
 	for (const auto& country: countries)
 	{
@@ -479,6 +483,7 @@ void EU4::World::outputLocalization(const Configuration& theConfiguration, bool 
 			french << " " << locblock.first << ":3 \"" << locDegrader.degradeString(locblock.second.french) << "\"\n";
 			spanish << " " << locblock.first << ":3 \"" << locDegrader.degradeString(locblock.second.spanish) << "\"\n";
 			german << " " << locblock.first << ":3 \"" << locDegrader.degradeString(locblock.second.german) << "\"\n";
+			simp_chinese << " " << locblock.first << ":3 \"" << locDegrader.degradeString(locblock.second.simp_chinese) << "\"\n";
 		}
 	}
 
@@ -488,6 +493,7 @@ void EU4::World::outputLocalization(const Configuration& theConfiguration, bool 
 		french << " " << locblock.first << ":3 \"" << locDegrader.degradeString(locblock.second.french) << "\"\n";
 		spanish << " " << locblock.first << ":3 \"" << locDegrader.degradeString(locblock.second.spanish) << "\"\n";
 		german << " " << locblock.first << ":3 \"" << locDegrader.degradeString(locblock.second.german) << "\"\n";
+		simp_chinese << " " << locblock.first << ":3 \"" << locDegrader.degradeString(locblock.second.simp_chinese) << "\"\n";
 	}
 
 	// localizations for dynamic cultures - don't have locblocks.
@@ -501,6 +507,7 @@ void EU4::World::outputLocalization(const Configuration& theConfiguration, bool 
 				french << " " << cultureName << ":0 \"" << locDegrader.degradeString(*culture->getSourceCulture()->getLocalizedName()) << "\"\n";
 				spanish << " " << cultureName << ":0 \"" << locDegrader.degradeString(*culture->getSourceCulture()->getLocalizedName()) << "\"\n";
 				german << " " << cultureName << ":0 \"" << locDegrader.degradeString(*culture->getSourceCulture()->getLocalizedName()) << "\"\n";
+				simp_chinese << " " << cultureName << ":0 \"" << locDegrader.degradeString(*culture->getSourceCulture()->getLocalizedName()) << "\"\n";
 			}
 
 	// localizations for dynamic nation ideas
@@ -510,6 +517,7 @@ void EU4::World::outputLocalization(const Configuration& theConfiguration, bool 
 		french << " " << idea << ":0 \"" << locBlock.french << "\"\n";
 		spanish << " " << idea << ":0 \"" << locBlock.spanish << "\"\n";
 		german << " " << idea << ":0 \"" << locBlock.german << "\"\n";
+		simp_chinese << " " << idea << ":0 \"" << locDegrader.degradeString(locBlock.simp_chinese) << "\"\n";
 	}
 	// more localizations for dynamic national ideas - don't have locblocks.
 	std::vector<std::string> suffix{"_ideas", "_ideas_start", "_ideas_bonus"};
@@ -517,6 +525,7 @@ void EU4::World::outputLocalization(const Configuration& theConfiguration, bool 
 	std::vector<std::string> fra_ideaText{"Idées", "Traditions", "Ambitions"};
 	std::vector<std::string> spa_ideaText{"Ideas", "tradiciones", "Ambiciones"};
 	std::vector<std::string> ger_ideaText{"Ideen", "Traditionen", "Ambitionen"};
+	std::vector<std::string> chi_ideaText{"思潮", "传统", "决心"};
 
 	for (const auto& idea: dynamicNationalIdeas)
 	{
@@ -526,6 +535,8 @@ void EU4::World::outputLocalization(const Configuration& theConfiguration, bool 
 			french << " " << idea.getDynamicName() + suffix[i] << ":0 \"" << locDegrader.degradeString(idea.getLocalizedName()) + " " + fra_ideaText[i] << "\"\n";
 			spanish << " " << idea.getDynamicName() + suffix[i] << ":0 \"" << locDegrader.degradeString(idea.getLocalizedName()) + " " + spa_ideaText[i] << "\"\n";
 			german << " " << idea.getDynamicName() + suffix[i] << ":0 \"" << locDegrader.degradeString(idea.getLocalizedName()) + " " + ger_ideaText[i] << "\"\n";
+			simp_chinese << " " << idea.getDynamicName() + suffix[i] << ":0 \"" << locDegrader.degradeString(idea.getLocalizedName()) + " " + chi_ideaText[i]
+							 << "\"\n";
 		}
 	}
 
@@ -540,16 +551,19 @@ void EU4::World::outputLocalization(const Configuration& theConfiguration, bool 
 		french << " PROV" << province->getProvinceID() << ":0 \"" << province->getCustomName() << "\"\n";
 		spanish << " PROV" << province->getProvinceID() << ":0 \"" << province->getCustomName() << "\"\n";
 		german << " PROV" << province->getProvinceID() << ":0 \"" << province->getCustomName() << "\"\n";
+		simp_chinese << " PROV" << province->getProvinceID() << ":0 \"" << locDegrader.degradeString(province->getCustomName()) << "\"\n";
 
 		english << " PROV_ADJ" << province->getProvinceID() << ":0 \"" << province->getCustomName() << "\"\n";
 		french << " PROV_ADJ" << province->getProvinceID() << ":0 \"" << province->getCustomName() << "\"\n";
 		spanish << " PROV_ADJ" << province->getProvinceID() << ":0 \"" << province->getCustomName() << "\"\n";
 		german << " PROV_ADJ" << province->getProvinceID() << ":0 \"" << province->getCustomName() << "\"\n";
+		simp_chinese << " PROV_ADJ" << province->getProvinceID() << ":0 \"" << locDegrader.degradeString(province->getCustomName()) << "\"\n";
 	}
 	english.close();
 	french.close();
 	spanish.close();
 	german.close();
+	simp_chinese.close();
 
 	if (invasion)
 	{

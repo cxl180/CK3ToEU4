@@ -37,9 +37,11 @@ std::string mappers::LocDegraderMapper::degradeString(const std::string& inputSt
 	for (const auto& [utf8, win1252]: replacements)
 	{
 		toReturn = std::regex_replace(toReturn, std::regex(utf8), win1252);
-		toReturn = EastAsiaLanguageSupport::utf8StringToSpecial(toReturn, true, true);
 	}
+
+	toReturn = EastAsiaLanguageSupport::utf8StringToSpecial(toReturn, true, true);
+
 	return toReturn;
-}//为了不重写代码，必须将内容整合至这一函数。
+}//I don't wanna to change the function. So I add it in there.
 
 

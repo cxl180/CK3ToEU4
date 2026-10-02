@@ -2,19 +2,31 @@
 #include <string>
 #include <algorithm>
 #include "EastAsiaLanguageSupport.h"
-std::string mappers::EastAsiaLanguageSupport::utf8StringToSpecial(std::string& s, bool toUTF8, bool isEU4)
+std::string mappers::EastAsiaLanguageSupport::utf8StringToSpecial(const std::string& s, bool toUTF8, bool isEU4)
 {
-	std::wstring ws = utf8ToWString(s);
-	std::string out;
-	unsigned int size = ws.size();
+	// Here is Chinese hell. I uses a pool English and I don't want to use it.
+	// ä¸»è¦æ¥è‡ªå¯¹https://gist.github.com/bruceCzK/96ad6e054111f929ed67291552d36334çš„æ”¹å†™ã€‚
 
-	for (unsigned int fromIndex = 0; fromIndex < size; fromIndex++)
+	std::wstring ws = utf8ToWString(s);
+	std::wstring escaped;
+	escaped.reserve(ws.size() * 3);
+
+	for (unsigned int fromIndex = 0; fromIndex < ws.size(); fromIndex++)
 	{
 		wchar_t c = ws[fromIndex];
-		// Ö÷ÒªÀ´×Ô¶Ôhttps://gist.github.com/bruceCzK/96ad6e054111f929ed67291552d36334µÄ¸ÄĞ´¡£
-		byte high = (c >> 8) & 0x000000FF;
-		byte low = c & 0x000000FF;
-		byte escapeChr = 0x10;
+
+		if(c < 256){
+			// æŒ‰ç›®æ ‡ç¼–ç ç›´æ¥è¾“å‡º
+			escaped.push_back(c);
+			continue;
+		}
+
+		
+
+		int high = (c >> 8) & 0x000000FF;
+		int low = c & 0x000000FF;
+		int escapeChr = 0x10;
+
 		// Magic numbers
 		int lowByteOffset = 15;
 		const int highByteOffset = -9;
@@ -24,10 +36,11 @@ std::string mappers::EastAsiaLanguageSupport::utf8StringToSpecial(std::string& s
 			lowByteOffset = 14;
 		}
 
-		// ÒÔÏÂÊÇÔ­×¢ÊÍ£º
+		// ä»¥ä¸‹æ˜¯åŸæ³¨é‡Šï¼š
 		// because characters in internalChars will be used in game as special characters, such as csv delimiter
 		// so we have to escape these characters
 		// 0x10 0x11 0x12 0x13 are all leading character to determine a multibyte letter start, depends on how the escape works
+
 		if (internalChars(high, toUTF8, isEU4))
 		{
 			escapeChr += 2;
@@ -54,17 +67,23 @@ std::string mappers::EastAsiaLanguageSupport::utf8StringToSpecial(std::string& s
 		}
 		if (toUTF8)
 		{
-			// ÒÔÏÂÊÇÔ­×¢ÊÍ£º
-			//   For EU4
+			//  ä»¥ä¸‹æ˜¯åŸæ³¨é‡Šï¼š
+			//  For EU4
 			//  Transform Latin1 extended control characters to utf8
 			//  Chars in this section will not display correctly in utf8 encoding
 			low = cp1252ToUCS2(low);
 			high = cp1252ToUCS2(high);
 		}
-		out.push_back(escapeChr);
-		out.push_back(cp1252ToUCS2(low));
-		out.push_back(cp1252ToUCS2(high));
+		escaped.push_back(escapeChr);
+		escaped.push_back(low);
+		escaped.push_back(high);
+
 	}
+	int codePage = toUTF8 ? CP_UTF8 : 1252;
+	int size = WideCharToMultiByte(codePage, 0, escaped.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	std::string out(size, '\0');
+	WideCharToMultiByte(codePage, 0, escaped.c_str(), -1, &out[0], size, nullptr, nullptr);
+	out.pop_back(); 
 	return out;
 }
 std::wstring mappers::EastAsiaLanguageSupport::utf8ToWString(const std::string& utf8)
@@ -77,7 +96,7 @@ std::wstring mappers::EastAsiaLanguageSupport::utf8ToWString(const std::string& 
 	return result;
 }
 
-// ¿´ÆğÀ´£¬ckºÍEU4¶¼ÊÇ·ÇLinuxµÄÑù×Ó£¬ÔÚ´Ë²»¿¼ÂÇlinux¡£
+// çœ‹èµ·æ¥ï¼Œckå’ŒEU4éƒ½æ˜¯éLinuxçš„æ ·å­ï¼Œåœ¨æ­¤ä¸è€ƒè™‘linuxã€‚
 
 wchar_t mappers::EastAsiaLanguageSupport::UCS2ToCP1252(int c)
 {
@@ -290,10 +309,10 @@ bool mappers::EastAsiaLanguageSupport::internalChars(byte highOrLow, bool toUTF8
 		case 0x3A:
 			return true;
 	}
-	// ÒÔÏÂÊÇÔ­×¢ÊÍ£º
+	// ä»¥ä¸‹æ˜¯åŸæ³¨é‡Šï¼š
 	// 0x20 in oldVersion escape will be transform to backslash which will not be parsed right by the engine
 	// So it has to be removed
-	// Will be transformed to 0x2f (backslash)£¨´Ë´¦Ó¦Îªslash£© in high byte, remove it
+	// Will be transformed to 0x2f (backslash)ï¼ˆæ­¤å¤„åº”ä¸ºslashï¼‰ in high byte, remove it
 	if (toUTF8)
 	{
 		if (highOrLow == 0x2F)
@@ -301,7 +320,7 @@ bool mappers::EastAsiaLanguageSupport::internalChars(byte highOrLow, bool toUTF8
 			return true;
 		}
 
-	} // ÈôÊÇ×ªµ½UTF8£¬Ôò¼ÓÈë0x2F£¬ÔÚ´ËÖ®ºó£¬Èô»¹ÊÇCK2£¬ÔòÈ¥µô0x20£»¼´³ı(×ªµ½UTF8²¢ÇÒÊÇCK2)Ö®Íâ£¬¶¼ÒªÌí¼Ó0x20.
+	} // è‹¥æ˜¯è½¬åˆ°UTF8ï¼Œåˆ™åŠ å…¥0x2Fï¼Œåœ¨æ­¤ä¹‹åï¼Œè‹¥è¿˜æ˜¯CK2ï¼Œåˆ™å»æ‰0x20ï¼›å³é™¤(è½¬åˆ°UTF8å¹¶ä¸”æ˜¯CK2)ä¹‹å¤–ï¼Œéƒ½è¦æ·»åŠ 0x20.
 	if ((!toUTF8 || isEU4) && highOrLow == 0x20)
 	{
 		return true;
