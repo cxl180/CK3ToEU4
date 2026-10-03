@@ -1,0 +1,32 @@
+﻿l_simp_chinese:
+ #These are here to replace Country Specific government names to make them more open
+ ottoman_government:3 "帕迪沙政体"
+ ottoman_government_desc:3 "帕迪沙政体在许多方面与皇室本身密不可分。后宫确保了帕迪沙——亦即"众王之主"——永远不会缺少继承人。"
+ english_monarchy:3 "特许君主制"
+ english_monarchy_desc:3 "特许君主制是一种代议制君主政体，由在位君主定期召集议会。其基础是君主与其封臣共同签署的宪章所规定的特权。"
+ mamluk_government:3 "切尔克斯奴兵政体"
+ mamluk_government_desc:3 "这个国家曾被切尔克斯奴兵夺取，并依靠持续输入切尔克斯奴兵来维持自身。"
+ indian_sultanate_reform:3 "达摩苏丹国"
+ indian_sultanate_reform_desc:3 "由于统治者是穆斯林少数群体，苏丹们不得不演进并拓展传统的穆斯林王权观念。这些国家虽仍属伊斯兰国家，但传统上涵盖犹太人与基督徒的"迪米"身份，已被扩展至达摩诸教信徒。"
+ prussian_monarchy:3 "军政君主制"
+ prussian_monarchy_desc:3 "一种由君主统治的政体形式，与其说是一个拥有军队的国家，不如说是一支拥有国家的军队。"
+ prussian_republic_reform:3 "军政行政体"
+ prussian_republic_reform_desc:3 "军政共和国既不由腐败的寡头统治，也不由愚昧大众的意志主宰，而是由其最具才干、久经考验的军事统帅治理。扩张与保卫疆界是国家的首要方针。\n\n禁用选举。"
+ prussian_republic:3 "军政行政体"
+ prussian_republic_desc:3 "军政共和国既不由腐败的寡头统治，也不由愚昧大众的意志主宰，而是由其最具才干、久经考验的军事统帅治理。扩张与保卫疆界是国家的首要方针。\n\n禁用选举。"
+ prussian_theocratic_reform_desc:0 "若信仰无法被捍卫，它还有何价值？上帝真正的仆人既布道祈祷，也同样拥抱战斗。我们的军政政府正是依此原则设计，军事与宗教本身处于同等重要的地位。"
+ mughal_government:3 "迪万制"
+ mughal_government_desc:3 "若说我们的王朝数百年来学到了什么，那就是必须能够适应我们所扩张地区的当地民众。让我们确保从被征服者身上学习，以使帝国持续壮大。"
+ federal_republic:3 "联邦共和国"
+ federal_republic_desc:3 "联邦共和国是由各邦组成的联盟，各邦保有自身的独立与政府，并设有一位经选举产生、任期四年的总统。"
+
+ austrian_archduchy_reform:3 "帝国大公国"
+ austrian_archduchy_reform_desc:3 "帝国大公国在组织上虽与封建君主国相似，却较其他公国高出一等。凭借长期统治他人——无论其为何人——并为本朝利益安排王朝事务的经验，大公们得以发展出一套有效的体系，用以治理其领地并维系其统一。"
+ austrian_archduchy:3 "帝国大公国"
+ austrian_archduchy_desc:3 "帝国大公国在组织上虽与封建君主国相似，却较其他公国高出一等。凭借长期统治他人——无论其为何人——并为本朝利益安排王朝事务的经验，大公们得以发展出一套有效的体系，用以治理其领地并维系其统一。"
+
+ shaka_regime:0 "军政部落"
+ shaka_regime_legacy:0 "军政部落"
+ shaka_regime_desc:0 "一种部落君主制，致力于以军事手段支配其他部落，并使国家军事化。"
+ shaka_regime_legacy_desc:0 "一种部落君主制，致力于以军事手段支配其他部落，并使国家军事化。"
+ 
